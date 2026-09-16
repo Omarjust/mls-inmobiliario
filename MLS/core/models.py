@@ -14,6 +14,7 @@ Convenciones del proyecto:
   * Nada se publica sin que un broker lo apruebe (ver `Inmueble.aprobar_publicacion`).
 """
 
+import hashlib
 import math
 import pathlib
 import random
@@ -853,13 +854,25 @@ class Inmueble(TimeStampedModel):
         """Punto desplazado dentro del radio de privacidad.
 
         Determinista por inmueble: el desplazamiento no cambia entre visitas,
-        así el pin no "salta" en el mapa.
+        así el pin no "salta" en el mapa y no se puede promediar una nube de
+        observaciones para estimar la posición real.
+
+        Alcance de la garantía: protege frente a un observador que repite la
+        consulta, no frente a uno que conozca `SECRET_KEY`. No es
+        geoindistinguibilidad en sentido formal, que exigiría ruido aleatorio
+        por consulta y reintroduciría el problema del promediado.
         """
         if not self.ubicacion:
             return None
         if self.mostrar_direccion_exacta:
             return self.ubicacion
-        rnd = random.Random(str(self.pk))
+        # La semilla combina el identificador con una clave del servidor: sin
+        # ella, cualquiera con el código fuente reproduce el desplazamiento y
+        # lo invierte para recuperar la posición real.
+        semilla = hashlib.sha256(
+            f"{settings.SECRET_KEY}:{self.pk}".encode()
+        ).hexdigest()
+        rnd = random.Random(semilla)
         angulo = rnd.uniform(0, 2 * math.pi)
         # sqrt() para distribuir uniformemente en el área, no concentrar al centro.
         distancia = self.radio_privacidad_m * math.sqrt(rnd.uniform(0.35, 1.0))

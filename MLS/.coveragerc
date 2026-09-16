@@ -1,0 +1,11 @@
+[run]
+source = core
+omit =
+    */migrations/*
+    */tests/*
+    core/apps.py
+    core/__init__.py
+
+[report]
+precision = 0
+skip_empty = True
