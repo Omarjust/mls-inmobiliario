@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Acceso · LatamMLS{% endblock %}</title>
+  <title>{% block title %}Acceso · HouseMatch MLS{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -15,8 +15,8 @@
   {# Panel de marca. Decorativo: se oculta en móvil. #}
   <aside class="auth__panel" aria-hidden="true">
     <a href="{% url 'core:landing' %}" class="marca">
-      <span class="marca__sello">MLS</span>
-      <span class="marca__texto" style="color:#fff">Latam<span style="color:rgba(255,255,255,.55)">MLS</span></span>
+      <span class="marca__sello">HM</span>
+      <span class="marca__texto" style="color:#fff">HouseMatch<span style="color:rgba(255,255,255,.55)"> MLS</span></span>
     </a>
 
     <div class="auth__panel-centro">
@@ -28,7 +28,7 @@
       </ul>
     </div>
 
-    <p class="auth__pie">&copy; {% now "Y" %} LatamMLS</p>
+    <p class="auth__pie">&copy; {% now "Y" %} HouseMatch MLS</p>
   </aside>
 
   <main class="auth__form">

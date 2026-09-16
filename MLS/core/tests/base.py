@@ -68,7 +68,7 @@ class BaseMLS(TestCase):
     @classmethod
     def _crear_asesor(cls, nombre, apellido, ci, agencia, broker=False):
         usuario = Usuario.objects.create_user(
-            email=f"{nombre.lower()}.{apellido.lower()}@latammls.com",
+            email=f"{nombre.lower()}.{apellido.lower()}@housematchmls.com",
             password=CLAVE, nombre=nombre, apellido=apellido,
         )
         asesor = Asesor.objects.create(

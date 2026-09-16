@@ -9,3 +9,6 @@ staticfiles/
 
 # Material de la materia y entregables: no se publican
 Documentos/
+
+# Salida del generador de video (pesada, se regenera)
+brag-output/

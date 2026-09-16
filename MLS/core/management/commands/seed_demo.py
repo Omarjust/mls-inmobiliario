@@ -161,14 +161,14 @@ class Command(BaseCommand):
                     "celular": f"+591 7{rnd.randint(1000000, 9999999)}",
                     "correo": f"contacto@{nombre.split()[0].lower()}.com",
                     "direccion": "Av. San Martín, Equipetrol",
-                    "descripcion": "Agencia asociada a la red LatamMLS.",
+                    "descripcion": "Agencia asociada a la red HouseMatch MLS.",
                 },
             )
             agencias.append(agencia)
 
         asesores = []
         for indice, (nombre, apellido, ci) in enumerate(ASESORES):
-            correo = f"{nombre.lower()}.{apellido.lower()}@latammls.com"
+            correo = f"{nombre.lower()}.{apellido.lower()}@housematchmls.com"
             asesor = Asesor.objects.filter(ci=ci, pais=bo).first()
             if asesor is None:
                 usuario, _ = Usuario.objects.get_or_create(

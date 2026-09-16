@@ -83,7 +83,7 @@ class RegistroAsesorForm(forms.Form):
         if ci and pais and Asesor.objects.filter(ci=ci, pais_id=pais).exists():
             raise ValidationError(
                 "Ya hay un asesor registrado con ese documento. Si sos vos, "
-                "escribinos a contacto@latammls.com."
+                "escribinos a contacto@housematchmls.com."
             )
         return ci
 

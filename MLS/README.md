@@ -54,7 +54,7 @@ nombre de usuario: `auth.User` no admite correos como `o'brien@x.com`.
 | `/panel/` | Panel del asesor |
 | `/panel/aprobaciones/` | Cola de revisión del broker |
 
-Tras `seed_demo`, para entrar como broker: **ana.rojas@latammls.com / demo12345**
+Tras `seed_demo`, para entrar como broker: **ana.rojas@housematchmls.com / demo12345**
 (los otros asesores usan la misma contraseña).
 
 ## Circuito de publicación

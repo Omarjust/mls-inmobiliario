@@ -4,32 +4,32 @@
   // Cada pantalla trae su propia URL y el pie que explica qué está probando.
   var VISTAS = {
     portada: {
-      url: "latammls.com",
-      alt: "Portada de LatamMLS: buscador de inmuebles sobre una fotografía, con las métricas del inventario debajo.",
+      url: "housematchmls.com",
+      alt: "Portada de HouseMatch MLS: buscador de inmuebles sobre una fotografía, con las métricas del inventario debajo.",
       pie: "La portada abre con el buscador y las métricas salen de la base, no son adorno: 12 propiedades publicadas, 4 asesores, 3 agencias."
     },
     buscador: {
-      url: "latammls.com/buscar/?operacion=venta",
+      url: "housematchmls.com/buscar/?operacion=venta",
       alt: "Resultados de búsqueda con filtros por operación, tipo, ciudad y precio.",
       pie: "El buscador filtra de verdad: operación, tipo, ciudad y rango de precio, con orden y paginación que conservan los filtros."
     },
     panel: {
-      url: "latammls.com/panel/",
+      url: "housematchmls.com/panel/",
       alt: "Panel del asesor con sus métricas, captaciones por vencer y su inventario.",
       pie: "El panel muestra solo lo del asesor. Pedir por dirección directa un inmueble ajeno devuelve 404, no 403: un 403 confirmaría que existe."
     },
     aprobaciones: {
-      url: "latammls.com/panel/aprobaciones/",
+      url: "housematchmls.com/panel/aprobaciones/",
       alt: "Cola de revisión del broker, con un aviso pendiente y los botones de aprobar o devolver.",
       pie: "La cola del broker. Nada de esto está en el portal todavía; al aprobar queda registrado quién lo hizo, y devolver exige escribir el motivo."
     },
     carga: {
-      url: "latammls.com/panel/inmueble/nuevo/",
+      url: "housematchmls.com/panel/inmueble/nuevo/",
       alt: "Formulario de carga de inmueble, con las secciones de ubicación pública y privada separadas.",
       pie: "El formulario separa la ubicación pública de la privada. La calle y el punto exacto son dato reservado de quien captó."
     },
     acceso: {
-      url: "latammls.com/ingresar/",
+      url: "housematchmls.com/ingresar/",
       alt: "Pantalla de acceso con el campo de correo electrónico.",
       pie: "La identidad es el correo, no un nombre de usuario: el modelo de Django no admite direcciones con apóstrofo, frecuentes en apellidos de la región."
     }
