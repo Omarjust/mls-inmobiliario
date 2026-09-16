@@ -2,6 +2,8 @@
 
 Django 6.1 + PostgreSQL 17 + PostGIS 3.6.
 
+**[Ver la app →](https://omarjust.github.io/mls-inmobiliario/)** · capturas de la aplicación corriendo, sin maqueta.
+
 ## Puesta en marcha
 
 ```bash

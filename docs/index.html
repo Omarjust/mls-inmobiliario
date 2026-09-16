@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LatamMLS — el inventario inmobiliario, compartido</title>
+<meta name="description" content="Un MLS para el mercado inmobiliario latinoamericano: inventario compartido entre agencias, con trazabilidad de la captación y reparto de comisiones documentado. Django, PostgreSQL y PostGIS.">
+<meta property="og:title" content="LatamMLS">
+<meta property="og:description" content="Un portal muestra avisos. Un MLS sostiene el acuerdo entre quien capta y quien vende.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="saltar" href="#pantallas">Ir al contenido</a>
+
+<!-- ─────────────────────────────────────────────────────────── hero -->
+<header class="hero">
+  <nav class="nav" aria-label="principal">
+    <span class="marca"><span class="sello">MLS</span> LatamMLS</span>
+    <div class="nav-enlaces">
+      <a href="#pantallas">la app</a>
+      <a href="#garantias">qué garantiza</a>
+      <a href="#correr">correrlo</a>
+      <a class="nav-repo" href="https://github.com/Omarjust/mls-inmobiliario">repositorio ↗</a>
+    </div>
+  </nav>
+
+  <div class="hero-cuerpo">
+    <p class="kicker">Multiple Listing Service · Latinoamérica</p>
+    <h1>Un portal muestra avisos.<br>Un&nbsp;MLS <em>sostiene el acuerdo</em>.</h1>
+    <p class="entrada">
+      Dos agencias pueden vender el mismo inmueble y cobrar las dos, porque el
+      sistema sabe quién lo captó, bajo qué contrato y cómo se reparte la
+      comisión. Esa es la diferencia, y no está en la interfaz: está en el
+      modelo de datos.
+    </p>
+    <div class="hero-acciones">
+      <a class="boton" href="#pantallas">Ver la app funcionando</a>
+      <a class="boton boton-plano" href="https://github.com/Omarjust/mls-inmobiliario">Leer el código</a>
+    </div>
+  </div>
+
+  <ul class="tira" aria-label="cifras del proyecto">
+    <li><b>16</b> entidades de dominio</li>
+    <li><b>21</b> reglas en el motor</li>
+    <li><b>57</b> comprobaciones, todas verdes</li>
+    <li><b>75<span>%</span></b> de cobertura</li>
+  </ul>
+</header>
+
+<main>
+
+<!-- ──────────────────────────────────────────────────── las pantallas -->
+<section class="pantallas" id="pantallas" aria-labelledby="t-pantallas">
+  <div class="cabecera-seccion">
+    <h2 id="t-pantallas">La app, sin maqueta</h2>
+    <p>Capturas de la aplicación corriendo con datos cargados. Elegí una pantalla.</p>
+  </div>
+
+  <div class="visor">
+    <div class="pestanas" role="tablist" aria-label="pantallas de la aplicación">
+      <button role="tab" id="tab-portada" aria-controls="p-portada" aria-selected="true" class="pestana activa" data-vista="portada">
+        <span class="pestana-n">01</span>
+        <span class="pestana-t">Portada</span>
+        <span class="pestana-d">Búsqueda primero, discurso después</span>
+      </button>
+      <button role="tab" id="tab-buscador" aria-controls="p-buscador" aria-selected="false" class="pestana" data-vista="buscador">
+        <span class="pestana-n">02</span>
+        <span class="pestana-t">Buscador</span>
+        <span class="pestana-d">Filtra por operación, zona y precio</span>
+      </button>
+      <button role="tab" id="tab-panel" aria-controls="p-panel" aria-selected="false" class="pestana" data-vista="panel">
+        <span class="pestana-n">03</span>
+        <span class="pestana-t">Panel del asesor</span>
+        <span class="pestana-d">Solo sus captaciones. Nada más</span>
+      </button>
+      <button role="tab" id="tab-aprobaciones" aria-controls="p-aprobaciones" aria-selected="false" class="pestana" data-vista="aprobaciones">
+        <span class="pestana-n">04</span>
+        <span class="pestana-t">Cola del broker</span>
+        <span class="pestana-d">Nada se publica sin que él apruebe</span>
+      </button>
+      <button role="tab" id="tab-carga" aria-controls="p-carga" aria-selected="false" class="pestana" data-vista="carga">
+        <span class="pestana-n">05</span>
+        <span class="pestana-t">Carga</span>
+        <span class="pestana-d">Zona pública y calle privada, separadas</span>
+      </button>
+      <button role="tab" id="tab-acceso" aria-controls="p-acceso" aria-selected="false" class="pestana" data-vista="acceso">
+        <span class="pestana-n">06</span>
+        <span class="pestana-t">Acceso</span>
+        <span class="pestana-d">Identidad por correo, no por usuario</span>
+      </button>
+    </div>
+
+    <figure class="marco">
+      <div class="barra-navegador">
+        <span class="puntos"><i></i><i></i><i></i></span>
+        <span class="url" id="url">latammls.com</span>
+      </div>
+      <div class="ventana" id="ventana">
+        <img id="captura" src="assets/portada.jpg" alt="Portada de LatamMLS: buscador de inmuebles sobre una fotografía, con métricas del inventario debajo." width="1500" height="4375">
+      </div>
+      <figcaption id="pie">
+        La portada abre con el buscador y las métricas salen de la base, no son
+        adorno: 12 propiedades publicadas, 4 asesores, 3 agencias.
+      </figcaption>
+    </figure>
+  </div>
+
+  <aside class="movil">
+    <div class="telefono">
+      <img src="assets/movil.jpg" alt="La portada de LatamMLS en pantalla de teléfono" width="560" height="1500" loading="lazy">
+    </div>
+    <div class="movil-texto">
+      <h3>También en el teléfono</h3>
+      <p>
+        El asesor carga inmuebles desde donde está parado, no desde una oficina.
+        Todo el sistema de diseño es propio —sin framework de CSS— y se adapta
+        hasta los 390&nbsp;px.
+      </p>
+    </div>
+  </aside>
+</section>
+
+<!-- ───────────────────────────────────────────────────── las garantías -->
+<section class="garantias" id="garantias" aria-labelledby="t-garantias">
+  <div class="cabecera-seccion">
+    <h2 id="t-garantias">Las reglas no están en el código.<br>Están en la base.</h2>
+    <p>
+      Una validación en la aplicación protege el camino que pasa por ese código.
+      Una restricción declarada en el motor protege también la carga masiva, la
+      migración y la API que todavía no existe.
+    </p>
+  </div>
+
+  <div class="consola">
+    <div class="consola-barra"><i></i><i></i><i></i><span>psql · mls_db</span></div>
+<pre><code><span class="c-p">&gt;</span> INSERT … un asesor en dos agencias a la vez
+<span class="c-e">ERROR:</span>  duplicate key value violates unique constraint
+        <span class="c-r">"uq_una_membresia_vigente_por_asesor"</span>
+
+<span class="c-p">&gt;</span> INSERT … publicar sin que conste quién lo aprobó
+<span class="c-e">ERROR:</span>  new row violates check constraint
+        <span class="c-r">"ck_publicado_requiere_revisor"</span></code></pre>
+  </div>
+
+  <ul class="reglas">
+    <li>
+      <h3>Una membresía vigente por asesor</h3>
+      <p>El vínculo con la agencia y su historial son la misma tabla. Dos tablas se desincronizan el día que alguien cambia de agencia sin cerrar el registro.</p>
+    </li>
+    <li>
+      <h3>Una captación vigente por inmueble</h3>
+      <p>El contrato con el propietario tiene tipo, vigencia y comisión pactada. No puede haber dos abiertos sobre la misma propiedad.</p>
+    </li>
+    <li>
+      <h3>Publicado exige revisor</h3>
+      <p>Ningún aviso llega al portal sin que quede registrado qué broker lo aprobó. La responsabilidad es rastreable, no declarativa.</p>
+    </li>
+    <li>
+      <h3>La dirección exacta tiene dueño</h3>
+      <p>El público ve la zona y un punto desplazado dentro de 300&nbsp;m. La calle y la coordenada real las ve quien captó el inmueble.</p>
+    </li>
+  </ul>
+
+  <p class="nota-garantias">
+    Veintiuna en total —doce de unicidad, nueve de verificación— y las
+    veintiuna se verifican una por una en la suite: se intenta escribir el
+    estado prohibido y se comprueba que el motor lo rechaza.
+  </p>
+</section>
+
+<!-- ──────────────────────────────────────────────────────── correrlo -->
+<section class="correr" id="correr" aria-labelledby="t-correr">
+  <div class="cabecera-seccion">
+    <h2 id="t-correr">Correlo vos</h2>
+    <p>PostgreSQL con PostGIS, un entorno virtual y datos de demostración cargados.</p>
+  </div>
+
+  <div class="bloque-codigo">
+    <button class="copiar" type="button" id="copiar" data-copia="git clone https://github.com/Omarjust/mls-inmobiliario.git
+cd mls-inmobiliario/MLS
+python -m venv ../venv &amp;&amp; ../venv/bin/pip install -r requirements.txt
+createdb mls_db &amp;&amp; psql -d mls_db -c &quot;CREATE EXTENSION postgis;&quot;
+../venv/bin/python manage.py migrate
+../venv/bin/python manage.py seed_demo --reset
+../venv/bin/python manage.py runserver">Copiar</button>
+<pre><code><span class="c-p">$</span> git clone https://github.com/Omarjust/mls-inmobiliario.git
+<span class="c-p">$</span> cd mls-inmobiliario/MLS
+<span class="c-p">$</span> python -m venv ../venv &amp;&amp; ../venv/bin/pip install -r requirements.txt
+<span class="c-p">$</span> createdb mls_db &amp;&amp; psql -d mls_db -c "CREATE EXTENSION postgis;"
+<span class="c-p">$</span> ../venv/bin/python manage.py migrate
+<span class="c-p">$</span> ../venv/bin/python manage.py seed_demo --reset
+<span class="c-p">$</span> ../venv/bin/python manage.py runserver</code></pre>
+  </div>
+
+  <p class="credenciales">
+    El comando de demostración deja tres agencias, cuatro asesores y doce
+    inmuebles, dos de ellos esperando aprobación para que la cola del broker
+    tenga contenido. Entrás como broker con
+    <code>ana.rojas@latammls.com</code> / <code>demo12345</code>.
+  </p>
+
+  <div class="pila">
+    <span>Python 3.14</span><span>Django 6.1</span><span>PostgreSQL 17</span>
+    <span>PostGIS 3.6</span><span>BunnyCDN</span><span>sin framework de CSS</span>
+  </div>
+</section>
+
+</main>
+
+<footer class="pie-sitio">
+  <div class="pie-cuerpo">
+    <p class="pie-frase">
+      Trasladar los invariantes del negocio a la base convierte los estados
+      inconsistentes <em>en imposibles</em>, no en improbables.
+    </p>
+    <div class="pie-enlaces">
+      <a href="https://github.com/Omarjust/mls-inmobiliario">github.com/Omarjust/mls-inmobiliario</a>
+      <span>Omar Justiniano Sikujara · Universidad Privada Boliviana · 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

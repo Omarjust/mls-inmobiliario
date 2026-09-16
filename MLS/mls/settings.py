@@ -146,6 +146,16 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Formato de números para Latinoamérica: 410.000,50 (el locale «es» genérico
+# usa espacio fino como separador de miles, que acá no se reconoce).
+USE_THOUSAND_SEPARATOR = True
+THOUSAND_SEPARATOR = '.'
+DECIMAL_SEPARATOR = ','
+
+# El locale «es» de Django define su propio separador y gana sobre los ajustes
+# de arriba: hay que sobrescribirlo con un módulo de formatos propio.
+FORMAT_MODULE_PATH = 'mls.formats'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
