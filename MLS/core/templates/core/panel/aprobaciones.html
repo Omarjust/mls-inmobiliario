@@ -1,0 +1,85 @@
+{% extends "core/base.html" %}
+
+{% block title %}Aprobaciones · LatamMLS{% endblock %}
+
+{% block content %}
+<section class="contenedor seccion">
+  <div class="encabezado-seccion">
+    <div>
+      <p class="eyebrow">Revisión</p>
+      <h1 class="titulo-seccion">Avisos esperando tu aprobación</h1>
+      <p class="bajada">
+        Nada de esto está visible en el portal todavía. Al aprobar, sale publicado
+        y queda registrado que lo aprobaste vos.
+      </p>
+    </div>
+    <a href="{% url 'core:panel' %}" class="enlace-flecha">&larr; Volver al panel</a>
+  </div>
+
+  {% if messages %}
+    {% for mensaje in messages %}
+      <p class="alerta alerta--{% if mensaje.tags == 'error' %}error{% else %}aviso{% endif %}">{{ mensaje }}</p>
+    {% endfor %}
+  {% endif %}
+
+  {% if pendientes %}
+    <div class="revision">
+      {% for inmueble in pendientes %}
+        <article class="revision__item">
+          <div class="revision__media">
+            {% with portada=inmueble.portada %}
+              {% if portada %}
+                <img src="{{ portada.src }}" alt="{{ inmueble.titulo }}" loading="lazy">
+              {% else %}
+                <div class="tarjeta__sinfoto">Sin fotografía</div>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <div class="revision__datos">
+            <p class="revision__meta">
+              {{ inmueble.captador.nombre_completo }} · enviado el {{ inmueble.enviado_a_revision_en|date:"d/m/Y H:i" }}
+            </p>
+            <h3>{{ inmueble.titulo }}</h3>
+            <p class="tarjeta__ubicacion">{{ inmueble.zona }} · {{ inmueble.ciudad.nombre }}</p>
+            <p class="tarjeta__precio">
+              {% if inmueble.precio_usd %}${{ inmueble.precio_usd|floatformat:0 }} <small>USD</small>{% else %}<small>Sin precio</small>{% endif %}
+            </p>
+            <div class="tarjeta__datos">
+              {% if inmueble.cuartos %}<span><b>{{ inmueble.cuartos }}</b> dorm.</span>{% endif %}
+              {% if inmueble.banos %}<span><b>{{ inmueble.banos }}</b> baños</span>{% endif %}
+              {% if inmueble.area_construida %}<span><b>{{ inmueble.area_construida|floatformat:0 }}</b> m²</span>{% endif %}
+              <span>{{ inmueble.imagenes.count }} foto{{ inmueble.imagenes.count|pluralize:"s" }}</span>
+            </div>
+          </div>
+
+          <div class="revision__acciones">
+            <a href="{% url 'core:inmueble_editar' inmueble.pk %}" class="btn btn--fantasma btn--chico">Ver ficha</a>
+            <form method="post" action="{% url 'core:inmueble_aprobar' inmueble.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--primario btn--bloque">Aprobar y publicar</button>
+            </form>
+            <details class="revision__rechazo">
+              <summary>Devolver al asesor</summary>
+              <form method="post" action="{% url 'core:inmueble_rechazar' inmueble.pk %}">
+                {% csrf_token %}
+                <div class="campo-form">
+                  <label for="motivo-{{ inmueble.pk }}">¿Qué hay que corregir?</label>
+                  <textarea name="motivo" id="motivo-{{ inmueble.pk }}" rows="3" required
+                            placeholder="El precio no coincide con la captación…"></textarea>
+                </div>
+                <button type="submit" class="btn btn--fantasma btn--bloque">Devolver</button>
+              </form>
+            </details>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="vacio">
+      <h3>No hay nada esperando</h3>
+      <p>Cuando un asesor de tu agencia mande un aviso a revisión, aparece acá.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

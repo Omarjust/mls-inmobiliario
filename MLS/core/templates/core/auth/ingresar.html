@@ -1,0 +1,32 @@
+{% extends "core/auth/base.html" %}
+
+{% block title %}Ingresar · LatamMLS{% endblock %}
+
+{% block content %}
+<p class="eyebrow">Acceso asesores</p>
+<h1 class="auth__titulo">Bienvenido de vuelta</h1>
+<p class="auth__bajada">Entrá con el correo que registraste en el MLS.</p>
+
+{% if form.non_field_errors %}
+  <div class="alerta alerta--error">
+    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}
+    {% include "core/partials/_campo_form.html" with campo=campo %}
+  {% endfor %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn--primario btn--bloque">Ingresar</button>
+</form>
+
+<p class="auth__nota">
+  <a href="mailto:contacto@latammls.com?subject=Recuperar%20contrase%C3%B1a">¿Olvidaste tu contraseña?</a>
+</p>
+
+<p class="auth__cambio">
+  ¿Todavía no tenés cuenta? <a href="{% url 'core:registro' %}">Sumate al MLS</a>
+</p>
+{% endblock %}

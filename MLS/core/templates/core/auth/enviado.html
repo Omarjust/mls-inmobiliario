@@ -1,0 +1,17 @@
+{% extends "core/auth/base.html" %}
+
+{% block title %}Solicitud enviada · LatamMLS{% endblock %}
+
+{% block content %}
+<p class="eyebrow">Listo</p>
+<h1 class="auth__titulo">Recibimos tu solicitud</h1>
+<p class="auth__bajada">
+  Un administrador del MLS la va a revisar. Te escribimos al correo que dejaste
+  apenas esté habilitada tu cuenta.
+</p>
+<p class="auth__bajada">
+  Mientras tanto ya podés ingresar, aunque todavía no vas a poder publicar.
+</p>
+<a href="{% url 'core:login' %}" class="btn btn--primario btn--bloque">Ir a ingresar</a>
+<p class="auth__cambio"><a href="{% url 'core:landing' %}">Volver al inicio</a></p>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Encontrá tu próximo lugar · LatamMLS{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Fotografía del hero: reemplazar por una imagen propia en core/static/core/img/ */
+  .hero { --hero-img: url("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=70"); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# ---------------------------------------------------------------- Hero #}
+<section class="hero">
+  <div class="contenedor hero__inner">
+    <p class="hero__kicker">Venta · Alquiler · Anticrético</p>
+    <h1>Encontrá el lugar<br>donde <em>empieza todo</em>.</h1>
+    <p class="hero__bajada">
+      Miles de propiedades verificadas, publicadas por asesores acreditados en toda
+      Latinoamérica. Una sola búsqueda, todo el inventario.
+    </p>
+  </div>
+</section>
+
+{# ------------------------------------------------------------ Buscador #}
+<section class="buscador">
+  <div class="contenedor">
+    {% include "core/partials/_buscador.html" %}
+    <div class="buscador__atajos">
+      <span>Búsquedas frecuentes:</span>
+      <a class="pildora" href="{% url 'core:buscar' %}?operacion=venta&amp;tipo=casa">Casas en venta</a>
+      <a class="pildora" href="{% url 'core:buscar' %}?operacion=alquiler&amp;tipo=departamento">Departamentos en alquiler</a>
+      <a class="pildora" href="{% url 'core:buscar' %}?operacion=anticretico">Anticrético</a>
+      <a class="pildora" href="{% url 'core:buscar' %}?operacion=preventa">Preventa</a>
+    </div>
+
+    <div class="metricas">
+      <div class="metrica">
+        <div class="metrica__valor">{{ metricas.inmuebles }}</div>
+        <div class="metrica__etiqueta">Propiedades publicadas</div>
+      </div>
+      <div class="metrica">
+        <div class="metrica__valor">{{ metricas.asesores }}</div>
+        <div class="metrica__etiqueta">Asesores acreditados</div>
+      </div>
+      <div class="metrica">
+        <div class="metrica__valor">{{ metricas.agencias }}</div>
+        <div class="metrica__etiqueta">Agencias en la red</div>
+      </div>
+      <div class="metrica">
+        <div class="metrica__valor">{{ metricas.ciudades }}</div>
+        <div class="metrica__etiqueta">Ciudades con cobertura</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ---------------------------------------------------------- Destacados #}
+<section class="seccion seccion--hueso" id="destacados">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <p class="eyebrow">Selección de la semana</p>
+        <h2 class="titulo-seccion">Propiedades destacadas</h2>
+      </div>
+      <a href="{% url 'core:buscar' %}" class="enlace-flecha">Ver todo el inventario &rarr;</a>
+    </div>
+
+    {% if destacados %}
+      <div class="grilla-inmuebles">
+        {% for inmueble in destacados %}
+          {% include "core/partials/_tarjeta_inmueble.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="vacio">
+        <h3>Todavía no hay propiedades publicadas</h3>
+        <p>Las publicaciones de los asesores aparecerán acá apenas se activen.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{# ------------------------------------------------------- Tipos y zonas #}
+{% if tipos_destacados %}
+<section class="seccion seccion--blanca">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <p class="eyebrow">Explorar</p>
+        <h2 class="titulo-seccion">¿Qué estás buscando?</h2>
+      </div>
+    </div>
+    <div class="grilla-tipos">
+      {% for tipo in tipos_destacados %}
+        <a class="tipo" href="{% url 'core:buscar' %}?tipo={{ tipo.slug }}">
+          <svg class="tipo__icono" width="26" height="26" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/>
+          </svg>
+          <div class="tipo__nombre">{{ tipo.nombre }}</div>
+          <div class="tipo__total">{{ tipo.total }} disponible{{ tipo.total|pluralize:"s" }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if ciudades_destacadas %}
+<section class="seccion seccion--hueso">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <p class="eyebrow">Cobertura</p>
+        <h2 class="titulo-seccion">Ciudades con más movimiento</h2>
+        <p class="bajada">El inventario crece cada semana con las captaciones de las agencias de la red.</p>
+      </div>
+    </div>
+    <div class="grilla-ciudades">
+      {% for ciudad in ciudades_destacadas %}
+        <a class="ciudad" href="{% url 'core:buscar' %}?ciudad={{ ciudad.pk }}">
+          <img src="https://picsum.photos/seed/ciudad{{ ciudad.pk }}/600/500" alt="{{ ciudad.nombre }}" loading="lazy">
+          <div>
+            <div class="ciudad__nombre">{{ ciudad.nombre }}</div>
+            <div class="ciudad__meta">
+              {{ ciudad.total }} propiedad{{ ciudad.total|pluralize:"es" }}
+              {% if ciudad.desde %} · desde ${{ ciudad.desde|floatformat:0 }} USD{% endif %}
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# -------------------------------------------------------- Cómo funciona #}
+<section class="seccion seccion--blanca">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <p class="eyebrow">Cómo funciona</p>
+        <h2 class="titulo-seccion">Comprar sin dar vueltas</h2>
+      </div>
+    </div>
+    <div class="pasos">
+      <div class="paso">
+        <div class="paso__num">01</div>
+        <h3>Buscá con filtros reales</h3>
+        <p>Operación, zona, superficie, dormitorios y precio en dólares o en moneda local. Sin publicaciones repetidas.</p>
+      </div>
+      <div class="paso">
+        <div class="paso__num">02</div>
+        <h3>Hablá con quien la captó</h3>
+        <p>Cada propiedad tiene un asesor acreditado y responsable detrás, con su código de registro visible.</p>
+      </div>
+      <div class="paso">
+        <div class="paso__num">03</div>
+        <h3>Visitá y cerrá</h3>
+        <p>Coordinás la visita directo con el asesor y el cierre queda documentado de punta a punta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ------------------------------------------------------ Banda asesores #}
+<section class="seccion seccion--hueso" id="asesores">
+  <div class="contenedor">
+    <div class="banda" id="agencias">
+      <div>
+        <p class="eyebrow" style="color:#f0c9b3">Para asesores y agencias</p>
+        <h2>Tu cartera, multiplicada por toda la red.</h2>
+        <p>Publicá tus captaciones una sola vez y ponelas frente a los compradores de cada agencia asociada. Las comisiones compartidas quedan registradas desde el primer día.</p>
+        <div class="banda__acciones" style="margin-top:28px">
+          <a href="{% url 'admin:index' %}" class="btn btn--primario">Sumarme al MLS</a>
+          <a href="#destacados" class="btn btn--claro">Ver el inventario</a>
+        </div>
+      </div>
+      <ul class="banda__lista">
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg>
+          Exclusivas y captaciones abiertas, con vigencia controlada.
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg>
+          Reparto de comisión entre captador y colocador, documentado.
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg>
+          Datos del propietario visibles solo para quien captó.
+        </li>
+        <li>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 13 4 4L19 7"/></svg>
+          Historial de precios y de operaciones cerradas.
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

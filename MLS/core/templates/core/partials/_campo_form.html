@@ -1,0 +1,16 @@
+{% comment %}Render de un campo de formulario. Espera `campo`.{% endcomment %}
+<div class="campo-form{% if campo.errors %} campo-form--error{% endif %}{% if campo.field.widget.input_type == 'checkbox' %} campo-form--check{% endif %}">
+  {% if campo.field.widget.input_type == 'checkbox' %}
+    <label for="{{ campo.id_for_label }}">
+      {{ campo }}
+      <span>{{ campo.label }}</span>
+    </label>
+  {% else %}
+    <label for="{{ campo.id_for_label }}">
+      {{ campo.label }}{% if campo.field.required %} <abbr title="obligatorio">*</abbr>{% endif %}
+    </label>
+    {{ campo }}
+  {% endif %}
+  {% if campo.help_text %}<small class="campo-form__ayuda">{{ campo.help_text }}</small>{% endif %}
+  {% for error in campo.errors %}<small class="campo-form__error">{{ error }}</small>{% endfor %}
+</div>

@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+
+{% block title %}Tu cuenta · LatamMLS{% endblock %}
+
+{% block content %}
+<section class="contenedor seccion">
+  <div class="vacio" style="max-width:620px;margin-inline:auto">
+    {% if not asesor %}
+      <p class="eyebrow">Cuenta sin asesor</p>
+      <h3>Tu cuenta todavía no está vinculada a un asesor</h3>
+      <p>
+        Escribinos a <a href="mailto:contacto@latammls.com">contacto@latammls.com</a>
+        y lo resolvemos.
+      </p>
+    {% elif asesor.estado == "pendiente" %}
+      <p class="eyebrow">En revisión</p>
+      <h3>Tu solicitud está siendo revisada</h3>
+      <p>
+        Un administrador del MLS la está mirando. Te avisamos a
+        <strong>{{ asesor.correo }}</strong> apenas esté habilitada tu cuenta.
+      </p>
+    {% else %}
+      <p class="eyebrow">Cuenta no habilitada</p>
+      <h3>Tu cuenta no está habilitada</h3>
+      <p>
+        Escribinos a <a href="mailto:contacto@latammls.com">contacto@latammls.com</a>
+        para revisar tu situación.
+      </p>
+    {% endif %}
+    <a href="{% url 'core:landing' %}" class="btn btn--fantasma" style="margin-top:24px">Volver al inicio</a>
+  </div>
+</section>
+{% endblock %}

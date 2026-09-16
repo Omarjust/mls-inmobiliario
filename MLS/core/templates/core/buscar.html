@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+
+{% block title %}Resultados de búsqueda · LatamMLS{% endblock %}
+
+{% block content %}
+<section class="contenedor resultados__cabecera">
+  <p class="eyebrow">Inventario</p>
+  <h1 class="titulo-seccion">Propiedades disponibles</h1>
+</section>
+
+<section class="contenedor" style="padding-top:24px">
+  {% include "core/partials/_buscador.html" %}
+
+  <div class="resultados__barra">
+    <p class="resultados__conteo">
+      {{ paginator.count }} propiedad{{ paginator.count|pluralize:"es" }} encontrada{{ paginator.count|pluralize:"s" }}
+    </p>
+    <form method="get" class="campo campo--select" style="border:1px solid var(--borde); border-radius:var(--radio); padding:8px 16px;">
+      {% for clave, valor in filtros.items %}
+        {% if clave != "orden" and clave != "page" %}<input type="hidden" name="{{ clave }}" value="{{ valor }}">{% endif %}
+      {% endfor %}
+      <label for="f-orden">Ordenar por</label>
+      <select name="orden" id="f-orden" onchange="this.form.submit()">
+        <option value="recientes" {% if filtros.orden == "recientes" %}selected{% endif %}>Más recientes</option>
+        <option value="precio_asc" {% if filtros.orden == "precio_asc" %}selected{% endif %}>Menor precio</option>
+        <option value="precio_desc" {% if filtros.orden == "precio_desc" %}selected{% endif %}>Mayor precio</option>
+      </select>
+    </form>
+  </div>
+
+  {% if inmuebles %}
+    <div class="grilla-inmuebles">
+      {% for inmueble in inmuebles %}
+        {% include "core/partials/_tarjeta_inmueble.html" %}
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav class="paginacion" aria-label="Paginación">
+        {% if page_obj.has_previous %}
+          <a href="?{{ querystring }}&amp;page={{ page_obj.previous_page_number }}">&larr;</a>
+        {% endif %}
+        {% for numero in paginator.page_range %}
+          {% if numero == page_obj.number %}
+            <span class="activa">{{ numero }}</span>
+          {% else %}
+            <a href="?{{ querystring }}&amp;page={{ numero }}">{{ numero }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+          <a href="?{{ querystring }}&amp;page={{ page_obj.next_page_number }}">&rarr;</a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="vacio">
+      <h3>No encontramos propiedades con esos filtros</h3>
+      <p>Probá ampliando el rango de precio o cambiando la ciudad.</p>
+      <a href="{% url 'core:buscar' %}" class="btn btn--fantasma" style="margin-top:20px">Limpiar filtros</a>
+    </div>
+  {% endif %}
+</section>
+
+<div style="height:80px"></div>
+{% endblock %}

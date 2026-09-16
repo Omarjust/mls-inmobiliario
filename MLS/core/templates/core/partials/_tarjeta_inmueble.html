@@ -1,0 +1,37 @@
+{% comment %}Tarjeta de inmueble. Espera `inmueble` en el contexto.{% endcomment %}
+<article class="tarjeta">
+  <div class="tarjeta__media">
+    {% with portada=inmueble.portada %}
+      {% if portada %}
+        <img src="{{ portada.src }}" alt="{{ inmueble.titulo }}" loading="lazy">
+      {% else %}
+        <div class="tarjeta__sinfoto">Sin fotografía</div>
+      {% endif %}
+    {% endwith %}
+    <span class="etiqueta">{{ inmueble.get_tipo_transaccion_display }}</span>
+  </div>
+
+  <div class="tarjeta__cuerpo">
+    <p class="tarjeta__precio">
+      {% if inmueble.precio_usd %}
+        ${{ inmueble.precio_usd|floatformat:0 }} <small>USD</small>
+      {% else %}
+        <small>Precio a consultar</small>
+      {% endif %}
+    </p>
+    <h3 class="tarjeta__titulo">{{ inmueble.titulo }}</h3>
+    <p class="tarjeta__ubicacion">{{ inmueble.zona }}{% if inmueble.zona %} · {% endif %}{{ inmueble.ciudad.nombre }}</p>
+
+    <div class="tarjeta__datos">
+      {% if inmueble.cuartos %}<span><b>{{ inmueble.cuartos }}</b> dorm.</span>{% endif %}
+      {% if inmueble.banos %}<span><b>{{ inmueble.banos }}</b> baños</span>{% endif %}
+      {% if inmueble.estacionamientos %}<span><b>{{ inmueble.estacionamientos }}</b> garaje</span>{% endif %}
+      {% if inmueble.area_construida %}<span><b>{{ inmueble.area_construida|floatformat:0 }}</b> m²</span>{% endif %}
+    </div>
+  </div>
+
+  <div class="tarjeta__pie">
+    <span class="tarjeta__codigo">{{ inmueble.codigo }}</span>
+    <span>{{ inmueble.tipo_inmueble.nombre }}</span>
+  </div>
+</article>

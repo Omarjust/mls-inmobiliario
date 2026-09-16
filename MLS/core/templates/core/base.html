@@ -1,0 +1,103 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MLS · Inmuebles en Latinoamérica{% endblock %}</title>
+  <meta name="description" content="{% block description %}Buscá casas, departamentos, terrenos y oficinas en venta, alquiler y anticrético en toda Latinoamérica.{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="contenedor cabecera__inner">
+    <a href="{% url 'core:landing' %}" class="marca">
+      <span class="marca__sello">MLS</span>
+      <span class="marca__texto">Latam<span>MLS</span></span>
+    </a>
+
+    <nav class="nav">
+      <a href="{% url 'core:buscar' %}?operacion=venta">Comprar</a>
+      <a href="{% url 'core:buscar' %}?operacion=alquiler">Alquilar</a>
+      <a href="{% url 'core:buscar' %}?operacion=anticretico">Anticrético</a>
+      <a href="{% url 'core:landing' %}#agencias">Agencias</a>
+      <a href="{% url 'core:landing' %}#asesores">Asesores</a>
+    </nav>
+
+    <div class="cabecera__acciones">
+      {% if user.is_authenticated %}
+        {% if user.is_staff %}
+          <a href="{% url 'admin:index' %}" class="btn btn--fantasma">Admin</a>
+        {% endif %}
+        <a href="{% url 'core:panel' %}" class="btn btn--petroleo">
+          {{ user.get_short_name }}
+        </a>
+        {# LogoutView solo acepta POST desde Django 5: un enlace devuelve 405. #}
+        <form method="post" action="{% url 'core:logout' %}" class="cabecera__salir">
+          {% csrf_token %}
+          <button type="submit" class="btn btn--fantasma">Salir</button>
+        </form>
+      {% else %}
+        <a href="{% url 'core:login' %}" class="btn btn--fantasma">Ingresar</a>
+        <a href="{% url 'core:registro' %}" class="btn btn--petroleo">Sumarme al MLS</a>
+      {% endif %}
+    </div>
+
+    <button class="menu-movil" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="pie">
+  <div class="contenedor">
+    <div class="pie__grid">
+      <div>
+        <div class="marca">
+          <span class="marca__sello">MLS</span>
+          <span class="marca__texto">Latam<span>MLS</span></span>
+        </div>
+        <p class="pie__desc">La red de inventario compartido que conecta asesores, agencias y propietarios en Latinoamérica.</p>
+      </div>
+      <div>
+        <h4>Buscar</h4>
+        <ul>
+          <li><a href="{% url 'core:buscar' %}?operacion=venta">Casas en venta</a></li>
+          <li><a href="{% url 'core:buscar' %}?operacion=alquiler">Departamentos en alquiler</a></li>
+          <li><a href="{% url 'core:buscar' %}?operacion=anticretico">Anticrético</a></li>
+          <li><a href="{% url 'core:buscar' %}?operacion=preventa">Proyectos en preventa</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Profesionales</h4>
+        <ul>
+          <li><a href="{% url 'core:registro' %}">Sumarse como asesor</a></li>
+          <li><a href="#agencias">Registrar agencia</a></li>
+          <li><a href="{% url 'core:login' %}">Ingresar al panel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:contacto@latammls.com">contacto@latammls.com</a></li>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pie__base">
+      <span>&copy; {% now "Y" %} LatamMLS. Todos los derechos reservados.</span>
+      <span>Términos · Privacidad</span>
+    </div>
+  </div>
+</footer>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

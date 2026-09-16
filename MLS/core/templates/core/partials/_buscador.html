@@ -1,0 +1,45 @@
+{% comment %}Buscador principal. Se usa en la landing y en la cabecera de resultados.{% endcomment %}
+<form class="buscador__caja" method="get" action="{% url 'core:buscar' %}" role="search">
+  <div class="buscador__grid">
+    <div class="campo campo--select">
+      <label for="f-operacion">Operación</label>
+      <select name="operacion" id="f-operacion">
+        <option value="">Todas</option>
+        {% for valor, etiqueta in operaciones %}
+          <option value="{{ valor }}" {% if filtros.operacion == valor %}selected{% endif %}>{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="campo campo--select">
+      <label for="f-tipo">Tipo de inmueble</label>
+      <select name="tipo" id="f-tipo">
+        <option value="">Todos</option>
+        {% for tipo in tipos %}
+          <option value="{{ tipo.slug }}" {% if filtros.tipo == tipo.slug %}selected{% endif %}>{{ tipo.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="campo campo--select">
+      <label for="f-ciudad">Ciudad</label>
+      <select name="ciudad" id="f-ciudad">
+        <option value="">Todas</option>
+        {% for ciudad in ciudades %}
+          <option value="{{ ciudad.pk }}" {% if filtros.ciudad == ciudad.pk|stringformat:"s" %}selected{% endif %}>{{ ciudad.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="campo campo--select">
+      <label for="f-precio">Precio</label>
+      <select name="precio" id="f-precio">
+        {% for valor, etiqueta in rangos_precio %}
+          <option value="{{ valor }}" {% if filtros.precio == valor %}selected{% endif %}>{{ etiqueta }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn--primario buscador__boton">Buscar</button>
+  </div>
+</form>

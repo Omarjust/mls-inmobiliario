@@ -1,0 +1,115 @@
+{% extends "core/base.html" %}
+
+{% block title %}{% if object %}Editar inmueble{% else %}Cargar inmueble{% endif %} · LatamMLS{% endblock %}
+
+{% block content %}
+<section class="contenedor seccion">
+
+  <div class="encabezado-seccion">
+    <div>
+      <p class="eyebrow">{% if object %}Editar{% else %}Nuevo{% endif %}</p>
+      <h1 class="titulo-seccion">
+        {% if object %}{{ object.titulo }}{% else %}Cargar un inmueble{% endif %}
+      </h1>
+      {% if object %}
+        <p class="bajada">
+          {{ object.codigo }} ·
+          <span class="etiqueta-estado etiqueta-estado--{{ object.estado_publicacion }}">
+            {{ object.get_estado_publicacion_display }}
+          </span>
+        </p>
+      {% endif %}
+    </div>
+    <a href="{% url 'core:panel' %}" class="enlace-flecha">&larr; Volver al panel</a>
+  </div>
+
+  {% if messages %}
+    {% for mensaje in messages %}
+      <p class="alerta alerta--{% if mensaje.tags == 'error' %}error{% else %}aviso{% endif %}">{{ mensaje }}</p>
+    {% endfor %}
+  {% endif %}
+
+  {% if object.motivo_rechazo %}
+    <div class="alerta alerta--error">
+      <strong>El broker te devolvió este aviso:</strong>
+      <p style="margin-top:6px">{{ object.motivo_rechazo }}</p>
+    </div>
+  {% endif %}
+
+  {% if form.errors or imagenes.errors %}
+    <p class="alerta alerta--error">Revisá los campos marcados abajo.</p>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" novalidate class="form-largo">
+    {% csrf_token %}
+
+    {% for titulo, campos in form.SECCIONES %}
+      <fieldset class="form-seccion">
+        <legend>{{ titulo }}</legend>
+        {% if titulo == "Ubicación privada" %}
+          <p class="form-seccion__nota">
+            Esto no se muestra al público: en el portal el mapa señala un punto
+            desplazado dentro del radio de privacidad.
+          </p>
+        {% endif %}
+        <div class="form-grilla">
+          {% for campo in form %}
+            {% if campo.name in campos %}
+              {% include "core/partials/_campo_form.html" with campo=campo %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+
+    {# ------------------------------------------------------------ Imágenes #}
+    <fieldset class="form-seccion">
+      <legend>Fotografías</legend>
+      <p class="form-seccion__nota">
+        Subí las fotos y se publican en el CDN. Si la foto ya está alojada en
+        otro lado, pegá la URL en su lugar.
+      </p>
+      {{ imagenes.management_form }}
+      <div class="formset-imagenes">
+        {% for subform in imagenes %}
+          <div class="formset-imagenes__fila">
+            {% for campo in subform.visible_fields %}
+              {% include "core/partials/_campo_form.html" with campo=campo %}
+            {% endfor %}
+            {% for campo in subform.hidden_fields %}{{ campo }}{% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <div class="form-acciones">
+      <button type="submit" class="btn btn--primario">Guardar</button>
+      <a href="{% url 'core:panel' %}" class="btn btn--fantasma">Cancelar</a>
+    </div>
+  </form>
+
+  {% if object %}
+    <div class="form-acciones form-acciones--peligro">
+      {% if object.estado_publicacion == "borrador" %}
+        <form method="post" action="{% url 'core:inmueble_enviar_revision' object.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn--petroleo">Enviar a revisión</button>
+        </form>
+        <p class="form-acciones__nota">
+          Lo va a revisar {{ object.agencia_captadora|default:"tu agencia" }} antes de publicarse.
+        </p>
+      {% elif object.estado_publicacion == "en_revision" %}
+        <p class="form-acciones__nota">
+          Este aviso está esperando la aprobación de {{ object.agencia_captadora|default:"tu agencia" }}.
+        </p>
+      {% endif %}
+      <form method="post" action="{% url 'core:inmueble_baja' object.pk %}"
+            onsubmit="return confirm('¿Dar de baja este inmueble? Se saca del portal pero no se borra.')">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--fantasma">Dar de baja</button>
+      </form>
+    </div>
+  {% endif %}
+
+</section>
+{% endblock %}

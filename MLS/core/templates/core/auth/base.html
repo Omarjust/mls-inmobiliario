@@ -1,0 +1,47 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Acceso · LatamMLS{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+</head>
+<body>
+<div class="auth">
+
+  {# Panel de marca. Decorativo: se oculta en móvil. #}
+  <aside class="auth__panel" aria-hidden="true">
+    <a href="{% url 'core:landing' %}" class="marca">
+      <span class="marca__sello">MLS</span>
+      <span class="marca__texto" style="color:#fff">Latam<span style="color:rgba(255,255,255,.55)">MLS</span></span>
+    </a>
+
+    <div class="auth__panel-centro">
+      <h2>{% block panel_titulo %}Tu cartera, multiplicada por toda la red.{% endblock %}</h2>
+      <ul class="auth__ventajas">
+        <li>Publicá una vez y llegá a los compradores de cada agencia asociada.</li>
+        <li>Comisiones compartidas registradas desde el primer día.</li>
+        <li>Los datos del propietario quedan solo para quien captó.</li>
+      </ul>
+    </div>
+
+    <p class="auth__pie">&copy; {% now "Y" %} LatamMLS</p>
+  </aside>
+
+  <main class="auth__form">
+    <div class="auth__caja">
+      {% if messages %}
+        {% for mensaje in messages %}
+          <p class="alerta alerta--{% if mensaje.tags == 'error' %}error{% else %}aviso{% endif %}">{{ mensaje }}</p>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

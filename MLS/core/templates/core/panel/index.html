@@ -1,0 +1,135 @@
+{% extends "core/base.html" %}
+
+{% block title %}Mi panel · LatamMLS{% endblock %}
+
+{% block content %}
+<section class="contenedor" style="padding-block:40px 0">
+
+  <div class="encabezado-seccion">
+    <div>
+      <p class="eyebrow">Panel</p>
+      <h1 class="titulo-seccion">Hola, {{ asesor.nombre }}</h1>
+      <p class="bajada">
+        {{ asesor.codigo_mls }}
+        {% if asesor.agencia_actual %}
+          · {{ asesor.agencia_actual }}{% if asesor.es_broker %} <span class="etiqueta etiqueta--broker">Broker</span>{% endif %}
+        {% else %}
+          · sin agencia
+        {% endif %}
+      </p>
+    </div>
+    {% if puede_publicar %}
+      <a href="{% url 'core:inmueble_nuevo' %}" class="btn btn--primario">Cargar inmueble</a>
+    {% endif %}
+  </div>
+
+  {% if messages %}
+    {% for mensaje in messages %}
+      <p class="alerta alerta--{% if mensaje.tags == 'error' %}error{% else %}aviso{% endif %}">{{ mensaje }}</p>
+    {% endfor %}
+  {% endif %}
+
+  {% if not puede_publicar %}
+    <div class="alerta alerta--aviso">
+      <strong>Necesitás pertenecer a una agencia para publicar.</strong>
+      Cada aviso lo aprueba el broker de tu agencia antes de salir al portal, así
+      que sin agencia no hay quien lo avale. Escribinos a
+      <a href="mailto:contacto@latammls.com">contacto@latammls.com</a> y te
+      ayudamos a sumarte a una.
+    </div>
+  {% endif %}
+
+  {# ---------------------------------------------------- Cola del broker #}
+  {% if por_aprobar %}
+    <div class="panel__cola">
+      <div>
+        <p class="eyebrow">Te están esperando</p>
+        <h2 class="titulo-seccion" style="font-size:24px">
+          {{ por_aprobar|length }} aviso{{ por_aprobar|length|pluralize:"s" }} de tu agencia por revisar
+        </h2>
+      </div>
+      <a href="{% url 'core:aprobaciones' %}" class="btn btn--petroleo">Revisar ahora</a>
+    </div>
+  {% endif %}
+
+  {# ------------------------------------------------------------ Métricas #}
+  <div class="panel__metricas">
+    <div class="metrica">
+      <div class="metrica__valor">{{ metricas.publicados }}</div>
+      <div class="metrica__etiqueta">Publicados</div>
+    </div>
+    <div class="metrica">
+      <div class="metrica__valor">{{ metricas.en_revision }}</div>
+      <div class="metrica__etiqueta">En revisión</div>
+    </div>
+    <div class="metrica">
+      <div class="metrica__valor">{{ metricas.borradores }}</div>
+      <div class="metrica__etiqueta">Borradores</div>
+    </div>
+    <div class="metrica">
+      <div class="metrica__valor">${{ metricas.comisiones|floatformat:0 }}</div>
+      <div class="metrica__etiqueta">Comisiones por cobrar</div>
+    </div>
+  </div>
+
+  {% if captaciones_por_vencer %}
+    <div class="alerta alerta--aviso">
+      <strong>Captaciones que vencen en los próximos 30 días:</strong>
+      <ul style="margin:8px 0 0;padding-left:20px">
+        {% for captacion in captaciones_por_vencer %}
+          <li>{{ captacion.inmueble.titulo }} — vence el {{ captacion.fecha_fin }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</section>
+
+{# ------------------------------------------------------------- Inventario #}
+<section class="seccion seccion--hueso" style="padding-top:48px">
+  <div class="contenedor">
+    <div class="encabezado-seccion">
+      <div>
+        <p class="eyebrow">Mi inventario</p>
+        <h2 class="titulo-seccion">
+          {% if asesor.es_broker %}Cartera de la agencia{% else %}Mis captaciones{% endif %}
+        </h2>
+      </div>
+    </div>
+
+    {% if inmuebles %}
+      <div class="grilla-inmuebles">
+        {% for inmueble in inmuebles %}
+          <div class="tarjeta-panel">
+            {% include "core/partials/_tarjeta_inmueble.html" %}
+            <div class="tarjeta-panel__acciones">
+              <span class="etiqueta-estado etiqueta-estado--{{ inmueble.estado_publicacion }}">
+                {{ inmueble.get_estado_publicacion_display }}
+              </span>
+              <div class="tarjeta-panel__botones">
+                <a href="{% url 'core:inmueble_editar' inmueble.pk %}" class="btn btn--fantasma btn--chico">Editar</a>
+                {% if inmueble.estado_publicacion == "borrador" %}
+                  <form method="post" action="{% url 'core:inmueble_enviar_revision' inmueble.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn--primario btn--chico">Enviar a revisión</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+            {% if inmueble.motivo_rechazo %}
+              <p class="tarjeta-panel__rechazo"><strong>Te lo devolvieron:</strong> {{ inmueble.motivo_rechazo }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="vacio">
+        <h3>Todavía no cargaste ningún inmueble</h3>
+        <p>Cargá el primero y mandalo a revisión para que salga al portal.</p>
+        {% if puede_publicar %}
+          <a href="{% url 'core:inmueble_nuevo' %}" class="btn btn--primario" style="margin-top:20px">Cargar inmueble</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

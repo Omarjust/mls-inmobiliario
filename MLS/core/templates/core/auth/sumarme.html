@@ -1,0 +1,36 @@
+{% extends "core/auth/base.html" %}
+
+{% block title %}Sumarme al MLS · LatamMLS{% endblock %}
+{% block panel_titulo %}Sumate a la red que comparte inventario.{% endblock %}
+
+{% block content %}
+<p class="eyebrow">Solicitud de ingreso</p>
+<h1 class="auth__titulo">Sumate al MLS</h1>
+<p class="auth__bajada">
+  Completá tus datos. Un administrador revisa la solicitud y te habilita la cuenta.
+</p>
+
+<form method="post" novalidate class="form-largo">
+  {% csrf_token %}
+  <div class="form-fila">
+    {% include "core/partials/_campo_form.html" with campo=form.nombre %}
+    {% include "core/partials/_campo_form.html" with campo=form.apellido %}
+  </div>
+  <div class="form-fila">
+    {% include "core/partials/_campo_form.html" with campo=form.ci %}
+    {% include "core/partials/_campo_form.html" with campo=form.pais %}
+  </div>
+  {% include "core/partials/_campo_form.html" with campo=form.celular %}
+  {% include "core/partials/_campo_form.html" with campo=form.correo %}
+  {% include "core/partials/_campo_form.html" with campo=form.agencia %}
+  <div class="form-fila">
+    {% include "core/partials/_campo_form.html" with campo=form.password1 %}
+    {% include "core/partials/_campo_form.html" with campo=form.password2 %}
+  </div>
+  <button type="submit" class="btn btn--primario btn--bloque">Enviar solicitud</button>
+</form>
+
+<p class="auth__cambio">
+  ¿Ya tenés cuenta? <a href="{% url 'core:login' %}">Ingresá</a>
+</p>
+{% endblock %}
